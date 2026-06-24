@@ -584,10 +584,10 @@ function renderPerfRateTable(detailKey, tableId) {
     // Region name: click shows 未完成 personnel
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="绩效审定" onclick="showStagePersonnel(this)">' + stageCounts["绩效审定"] + '(' + (total > 0 ? Math.round(stageCounts["绩效审定"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HRBP审核" onclick="showStagePersonnel(this)">' + stageCounts["HRBP审核"] + '(' + (total > 0 ? Math.round(stageCounts["HRBP审核"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="员工确认" onclick="showStagePersonnel(this)">' + stageCounts["员工确认"] + '(' + (total > 0 ? Math.round(stageCounts["员工确认"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HR归档" onclick="showStagePersonnel(this)">' + stageCounts["HR归档"] + '(' + (total > 0 ? Math.round(stageCounts["HR归档"]/total*1000)/10 : 0) + '%)</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="绩效审定" onclick="showStagePersonnel(this)">' + stageCounts["绩效审定"] + '</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HRBP审核" onclick="showStagePersonnel(this)">' + stageCounts["HRBP审核"] + '</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="员工确认" onclick="showStagePersonnel(this)">' + stageCounts["员工确认"] + '</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HR归档" onclick="showStagePersonnel(this)">' + stageCounts["HR归档"] + '</td>';
     // Completion rate: click shows 已完成 personnel
     html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
@@ -618,9 +618,9 @@ function renderTargetRateTable(detailKey, tableId) {
     // Region name: click shows 未完成 personnel
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="制定目标" onclick="showStagePersonnel(this)">' + stageCounts["制定目标"] + '(' + (total > 0 ? Math.round(stageCounts["制定目标"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="目标审核" onclick="showStagePersonnel(this)">' + stageCounts["目标审核"] + '(' + (total > 0 ? Math.round(stageCounts["目标审核"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="已完成" onclick="showStagePersonnel(this)">' + done + '(' + (total > 0 ? Math.round(done/total*1000)/10 : 0) + '%)</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="制定目标" onclick="showStagePersonnel(this)">' + stageCounts["制定目标"] + '</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="目标审核" onclick="showStagePersonnel(this)">' + stageCounts["目标审核"] + '</td>';
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="已完成" onclick="showStagePersonnel(this)">' + done + '</td>';
     // Completion rate: click shows 已完成 personnel
     html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
