@@ -230,7 +230,7 @@ function renderSummaryCards() {
   SUMMARY_ORDER.forEach(function(region) {
     var d = SUMMARY_DATA[region];
     if (!d) return;
-    html += '<div class="overview-card clickable" onclick="showSummaryRegionDrill('' + region + '')">';
+    html += '<div class="overview-card clickable" onclick="showSummaryRegionDrill(\'' + region + '\')">';
     html += '<div class="card-title">' + region + '</div>';
     html += '<div class="split-row">';
     html += '<div class="split-col left">';
@@ -328,7 +328,7 @@ function renderSummaryRateTable() {
   var tbody = document.querySelector('#summaryRateTable tbody');
   var html = '';
   SUMMARY_RATE.forEach(function(r) {
-    html += '<tr class="clickable" onclick="showSummaryRegionDrill('' + r.region + '')">';
+    html += '<tr class="clickable" onclick="showSummaryRegionDrill(\'' + r.region + '\')">';
     html += '<td>' + r.region + '</td>';
     html += '<td>' + r.target_total + '</td>';
     html += '<td>' + r.target_done + '</td>';
@@ -351,7 +351,7 @@ function renderDetailCards(detailKey, containerId) {
   order.forEach(function(region) {
     var td = dd.target[region] || {total:0, done:0, rate:0};
     var pd = dd.perf[region] || {total:0, done:0, rate:0};
-    html += '<div class="overview-card clickable" onclick="showDetailDrill('' + detailKey + '', '' + region.replace(/'/g, "\'") + '')">';
+    html += '<div class="overview-card clickable" onclick="showDetailDrill(\'' + detailKey + '\', \'' + region.replace(/'/g, "\'") + '\')">';
     html += '<div class="card-title">' + region + '</div>';
     html += '<div class="split-row">';
     html += '<div class="split-col left">';
