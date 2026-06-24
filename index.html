@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FBU-6月海外绩效晒干看板</title>
+<title>FBU海外绩效看板-6月</title>
 </head>
 <body>
 <script>
@@ -130,7 +130,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 </style>
 <div class="header">
   <div class="title-row">
-    <div><h1>FBU-6月海外绩效晒干看板</h1><div class="subtitle">Performance &amp; Target Dashboard</div></div>
+    <div><h1>FBU海外绩效看板-6月</h1><div class="subtitle">Performance &amp; Target Dashboard</div></div>
     <div class="meta">数据更新时间：2026年6月24日<br>统计周期：2026年5月1日 - 2026年6月30日</div>
   </div>
 </div>
@@ -722,7 +722,7 @@ function downloadScreenshot() {
   if (typeof html2canvas !== 'undefined') {
     html2canvas(document.querySelector('.container'), { scale: 2, useCORS: true, backgroundColor: '#f0f2f5' }).then(function(canvas) {
       var link = document.createElement('a');
-      link.download = 'FBU-6月看板-' + new Date().toISOString().slice(0,10) + '.png';
+      link.download = 'FBU\u6d77\u5916\u7ee9\u6548\u770b\u677f-' + (new Date().getMonth()+1) + '\u6708-' + new Date().toISOString().slice(0,10) + '.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
