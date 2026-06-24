@@ -451,15 +451,15 @@ function renderSummaryChart() {
     series: [
       { name: '绩效已完成', type: 'bar', stack: 'perf', data: perfDone, itemStyle: { color: '#4a80c0' }, barWidth: 20,
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#c49a78' },
+      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#e05a5a' },
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
       { name: '目标已完成', type: 'bar', stack: 'target', data: targetDone, itemStyle: { color: '#5aad60' }, barWidth: 20,
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#d4a06a' },
+      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#e8923a' },
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, smooth: true, itemStyle: { color: '#d08030' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, itemStyle: { color: '#d08030' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
         label: { show: true, position: 'top', formatter: '{c}%', fontSize: 9, color: '#d08030' } },
-      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, smooth: true, itemStyle: { color: '#3a9e7a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, itemStyle: { color: '#3a9e7a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
         label: { show: true, position: 'bottom', formatter: '{c}%', fontSize: 9, color: '#3a9e7a' } }
     ]
   });
@@ -546,15 +546,15 @@ function renderDetailChart(detailKey, chartId) {
     series: [
       { name: '绩效已完成', type: 'bar', stack: 'perf', data: perfDone, itemStyle: { color: '#4a80c0' }, barWidth: 22,
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#c49a78' },
+      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#e05a5a' },
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
       { name: '目标已完成', type: 'bar', stack: 'target', data: targetDone, itemStyle: { color: '#5aad60' }, barWidth: 22,
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#d4a06a' },
+      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#e8923a' },
         label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
-      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, smooth: true, itemStyle: { color: '#d08030' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, itemStyle: { color: '#d08030' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
         label: { show: true, position: 'top', formatter: '{c}%', fontSize: 9, color: '#d08030' } },
-      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, smooth: true, itemStyle: { color: '#3a9e7a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, itemStyle: { color: '#3a9e7a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
         label: { show: true, position: 'bottom', formatter: '{c}%', fontSize: 9, color: '#3a9e7a' } }
     ]
   });
