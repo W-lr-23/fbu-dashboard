@@ -83,13 +83,17 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 .overview-card:hover { box-shadow: 0 4px 16px rgba(45,106,160,0.2); transform: translateY(-2px); }
 .overview-card .card-title { font-size: 16px; font-weight: 700; color: #1a3a5c; padding: 14px 16px 10px; text-align: center; }
 .card-table { width: 100%; border-collapse: collapse; }
-.card-table td { padding: 10px 12px; cursor: pointer; transition: background 0.2s; text-align: center; vertical-align: middle; border-top: 1px solid #f0f0f0; }
-.card-table td:hover { background: #f5f8fc; }
-.card-table .perf-hdr { background: #1a3a6c; color: #fff; font-size: 12px; font-weight: 500; padding: 8px 12px; border: none; }
-.card-table .target-hdr { background: #6ec071; color: #fff; font-size: 12px; font-weight: 500; padding: 8px 12px; border: none; }
-.card-table .rate-val { font-size: 28px; font-weight: 800; color: #1a3a6c; }
-.card-table td:last-child .rate-val { color: #2d8a3e; }
-.card-table .meta-val { font-size: 11px; color: #888; margin-top: 2px; }
+.card-table td { padding: 10px 12px; text-align: center; vertical-align: middle; }
+.card-table tr:first-child td { padding: 8px 12px; font-size: 12px; font-weight: 600; color: #fff; }
+.card-table tr:first-child td:first-child { background: #4a6a8f; }
+.card-table tr:first-child td:last-child { background: #5a9e6f; }
+.card-table td:first-child:not(.perf-hdr):not(.target-hdr) { background: #dce4ed; cursor: pointer; transition: background 0.2s; }
+.card-table td:last-child:not(.perf-hdr):not(.target-hdr) { background: #d9eddf; cursor: pointer; transition: background 0.2s; }
+.card-table td:first-child:not(.perf-hdr):not(.target-hdr):hover { background: #cdd8e6; }
+.card-table td:last-child:not(.perf-hdr):not(.target-hdr):hover { background: #c9e2d0; }
+.card-table .rate-val { font-size: 28px; font-weight: 800; color: #2c4a6e; }
+.card-table td:last-child .rate-val { color: #2d6a3e; }
+.card-table .meta-val { font-size: 11px; color: #556; margin-top: 2px; }
 .detail-overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 20px; }
 .detail-card { background: #fff; border-radius: 8px; padding: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; border: 1px solid #e8e8e8; overflow: hidden; }
 .detail-card:hover { box-shadow: 0 4px 16px rgba(45,106,160,0.2); transform: translateY(-2px); }
@@ -404,7 +408,7 @@ function renderPersonTable(rows) {
   return html;
 }
 
-// ========== Summary Chart ==========
+// ========== Summary Chart (dual bars: perf + target) ==========
 function renderSummaryChart() {
   var chart = safeInitChart('summaryChart');
   if (!chart) return;
@@ -424,30 +428,38 @@ function renderSummaryChart() {
   CHART_REGION_ORDER.forEach(function(r) { if (regionData[r]) xData.push(r); });
   Object.keys(regionData).forEach(function(r) { if (xData.indexOf(r) < 0) xData.push(r); });
 
-  var doneData = [], pendingData = [], rateData = [];
+  var perfDone = [], perfPending = [], targetDone = [], targetPending = [];
+  var perfRates = [], targetRates = [];
   xData.forEach(function(r) {
     var d = regionData[r];
-    var total = d.perf.total + d.target.total;
-    var done = d.perf.done + d.target.done;
-    doneData.push(done);
-    pendingData.push(total - done);
-    rateData.push(total > 0 ? Math.round(done / total * 1000) / 10 : 0);
+    perfDone.push(d.perf.done); perfPending.push(d.perf.total - d.perf.done);
+    targetDone.push(d.target.done); targetPending.push(d.target.total - d.target.done);
+    perfRates.push(d.perf.total > 0 ? Math.round(d.perf.done / d.perf.total * 1000) / 10 : 0);
+    targetRates.push(d.target.total > 0 ? Math.round(d.target.done / d.target.total * 1000) / 10 : 0);
   });
 
   chart.setOption({
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-    legend: { data: ['已完成','未完成','完成率'], top: 5 },
-    grid: { left: 60, right: 60, top: 50, bottom: 80 },
+    legend: { data: ['绩效已完成','绩效未完成','目标已完成','目标未完成','绩效完成率','目标完成率'], top: 5, textStyle: { fontSize: 11 } },
+    grid: { left: 60, right: 60, top: 55, bottom: 80 },
     xAxis: { type: 'category', data: xData, axisLabel: { fontSize: 10, rotate: 45 } },
     yAxis: [
       { type: 'value', name: '人数' },
       { type: 'value', name: '完成率(%)', min: 0, max: 100, axisLabel: { formatter: '{value}%' } }
     ],
     series: [
-      { name: '已完成', type: 'bar', stack: 'total', data: doneData, itemStyle: { color: '#6ec071' }, barWidth: 22 },
-      { name: '未完成', type: 'bar', stack: 'total', data: pendingData, itemStyle: { color: '#5b9bd5' } },
-      { name: '完成率', type: 'line', yAxisIndex: 1, data: rateData, itemStyle: { color: '#fa8c16' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
-        label: { show: true, position: 'top', formatter: '{c}%', fontSize: 10 } }
+      { name: '绩效已完成', type: 'bar', stack: 'perf', data: perfDone, itemStyle: { color: '#7a9cbf' }, barWidth: 20,
+        label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
+      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#c4b8a8' },
+        label: { show: true, position: 'inside', fontSize: 10, color: '#666' } },
+      { name: '目标已完成', type: 'bar', stack: 'target', data: targetDone, itemStyle: { color: '#8bbf8e' }, barWidth: 20,
+        label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
+      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#d4b896' },
+        label: { show: true, position: 'inside', fontSize: 10, color: '#666' } },
+      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, itemStyle: { color: '#c08040' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+        label: { show: true, position: 'top', formatter: '{c}%', fontSize: 9, color: '#c08040' } },
+      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, itemStyle: { color: '#5a9e8a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+        label: { show: true, position: 'bottom', formatter: '{c}%', fontSize: 9, color: '#5a9e8a' } }
     ]
   });
 }
@@ -522,20 +534,26 @@ function renderDetailChart(detailKey, chartId) {
   });
   chart.setOption({
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
-    legend: { data: ['绩效已完成','绩效待完成','目标已完成','目标待完成','绩效完成率','目标完成率'], top: 5 },
-    grid: { left: 60, right: 60, top: 50, bottom: 70 },
+    legend: { data: ['绩效已完成','绩效未完成','目标已完成','目标未完成','绩效完成率','目标完成率'], top: 5, textStyle: { fontSize: 11 } },
+    grid: { left: 60, right: 60, top: 55, bottom: 70 },
     xAxis: { type: 'category', data: xData, axisLabel: { fontSize: 11, rotate: 35 } },
     yAxis: [
       { type: 'value', name: '人数' },
       { type: 'value', name: '完成率(%)', min: 0, max: 100, axisLabel: { formatter: '{value}%' } }
     ],
     series: [
-      { name: '绩效已完成', type: 'bar', stack: 'perf', data: perfDone, itemStyle: { color: '#5b9bd5' }, barWidth: 24 },
-      { name: '绩效待完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#ff7875' } },
-      { name: '目标已完成', type: 'bar', stack: 'target', data: targetDone, itemStyle: { color: '#6ec071' }, barWidth: 24 },
-      { name: '目标待完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#ff9c6e' } },
-      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, itemStyle: { color: '#fa8c16' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6 },
-      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, itemStyle: { color: '#13c2c2' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6 }
+      { name: '绩效已完成', type: 'bar', stack: 'perf', data: perfDone, itemStyle: { color: '#7a9cbf' }, barWidth: 22,
+        label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
+      { name: '绩效未完成', type: 'bar', stack: 'perf', data: perfPending, itemStyle: { color: '#c4b8a8' },
+        label: { show: true, position: 'inside', fontSize: 10, color: '#666' } },
+      { name: '目标已完成', type: 'bar', stack: 'target', data: targetDone, itemStyle: { color: '#8bbf8e' }, barWidth: 22,
+        label: { show: true, position: 'inside', fontSize: 10, color: '#fff' } },
+      { name: '目标未完成', type: 'bar', stack: 'target', data: targetPending, itemStyle: { color: '#d4b896' },
+        label: { show: true, position: 'inside', fontSize: 10, color: '#666' } },
+      { name: '绩效完成率', type: 'line', yAxisIndex: 1, data: perfRates, itemStyle: { color: '#c08040' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+        label: { show: true, position: 'top', formatter: '{c}%', fontSize: 9, color: '#c08040' } },
+      { name: '目标完成率', type: 'line', yAxisIndex: 1, data: targetRates, itemStyle: { color: '#5a9e8a' }, lineStyle: { width: 2 }, symbol: 'circle', symbolSize: 6,
+        label: { show: true, position: 'bottom', formatter: '{c}%', fontSize: 9, color: '#5a9e8a' } }
     ]
   });
 }
