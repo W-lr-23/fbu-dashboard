@@ -78,28 +78,24 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 .section-header { font-size: 20px; font-weight: 700; color: #0d1f3c; margin: 0 0 20px; padding: 12px 0; border-bottom: 3px solid #2d6aa0; display: flex; align-items: center; gap: 10px; }
 .section-header .icon { width: 28px; height: 28px; background: #2d6aa0; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 700; }
 .sub-title { font-size: 16px; font-weight: 600; color: #1a3a5c; margin: 24px 0 12px; padding-left: 10px; border-left: 4px solid #2d6aa0; }
-.summary-toggle { display: inline-flex; gap: 0; margin-left: 16px; border-radius: 6px; overflow: hidden; border: 1px solid #2d6aa0; }
-.summary-toggle .toggle-btn { padding: 6px 18px; font-size: 13px; cursor: pointer; background: #fff; color: #2d6aa0; border: none; transition: all 0.2s; }
-.summary-toggle .toggle-btn.active { background: #2d6aa0; color: #fff; font-weight: 600; }
 .overview-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
-.overview-card { background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s; border-left: 4px solid #2d6aa0; }
+.overview-card { background: #fff; border-radius: 8px; padding: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; border: 1px solid #e8e8e8; overflow: hidden; }
 .overview-card:hover { box-shadow: 0 4px 16px rgba(45,106,160,0.2); transform: translateY(-2px); }
-.overview-card .card-title { font-size: 15px; font-weight: 600; color: #1a3a5c; margin-bottom: 10px; }
-.overview-card .big-rate { font-size: 36px; font-weight: 800; color: #2d6aa0; line-height: 1.1; }
-.overview-card .card-meta { font-size: 12px; color: #999; margin-top: 6px; }
-.detail-overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-bottom: 20px; }
-.detail-card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); cursor: pointer; transition: all 0.2s; border-left: 4px solid #2d6aa0; }
+.overview-card .card-title { font-size: 16px; font-weight: 700; color: #1a3a5c; padding: 14px 16px 10px; text-align: center; }
+.card-table { width: 100%; border-collapse: collapse; }
+.card-table td { padding: 10px 12px; cursor: pointer; transition: background 0.2s; text-align: center; vertical-align: middle; border-top: 1px solid #f0f0f0; }
+.card-table td:hover { background: #f5f8fc; }
+.card-table .perf-hdr { background: #1a3a6c; color: #fff; font-size: 12px; font-weight: 500; padding: 8px 12px; border: none; }
+.card-table .target-hdr { background: #6ec071; color: #fff; font-size: 12px; font-weight: 500; padding: 8px 12px; border: none; }
+.card-table .rate-val { font-size: 28px; font-weight: 800; color: #1a3a6c; }
+.card-table td:last-child .rate-val { color: #2d8a3e; }
+.card-table .meta-val { font-size: 11px; color: #888; margin-top: 2px; }
+.detail-overview-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 20px; }
+.detail-card { background: #fff; border-radius: 8px; padding: 0; box-shadow: 0 1px 4px rgba(0,0,0,0.06); transition: all 0.2s; border: 1px solid #e8e8e8; overflow: hidden; }
 .detail-card:hover { box-shadow: 0 4px 16px rgba(45,106,160,0.2); transform: translateY(-2px); }
-.detail-card .card-title { font-size: 14px; font-weight: 600; color: #1a3a5c; margin-bottom: 8px; }
-.detail-card .big-rate { font-size: 28px; font-weight: 800; color: #2d6aa0; line-height: 1.1; }
-.detail-card .card-meta { font-size: 11px; color: #999; margin-top: 4px; }
-.detail-card .split-row { display: flex; gap: 8px; margin-top: 8px; }
-.detail-card .split-col { flex: 1; padding: 6px 8px; border-radius: 5px; }
-.detail-card .split-col.left { background: #e8f0fe; }
-.detail-card .split-col.right { background: #e6f3e6; }
-.detail-card .col-label { font-size: 10px; color: #888; }
-.detail-card .col-num { font-size: 15px; font-weight: 700; }
-.detail-card .col-sub { font-size: 10px; color: #999; }
+.detail-card .card-title { font-size: 14px; font-weight: 600; color: #1a3a5c; padding: 10px 14px 6px; text-align: center; }
+.detail-card .card-table .rate-val { font-size: 22px; }
+.detail-card .card-table .meta-val { font-size: 10px; }
 .chart-box { width: 100%; height: 420px; background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px; }
 .data-table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px; }
 .data-table th { background: #1a3a5c; color: #fff; padding: 10px 12px; font-size: 13px; font-weight: 500; text-align: center; }
@@ -150,12 +146,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 <div class="container">
 <div class="dashboard-section" id="sec-summary">
   <div class="section-header"><div class="icon">汇</div>汇总看板</div>
-  <div class="sub-title" style="display:flex;align-items:center;">各区域概览
-    <div class="summary-toggle">
-      <button class="toggle-btn active" data-view="target" onclick="toggleSummaryView('target')">6月目标</button>
-      <button class="toggle-btn" data-view="perf" onclick="toggleSummaryView('perf')">5月绩效</button>
-    </div>
-  </div>
+  <div class="sub-title">各区域概览</div>
   <div class="overview-grid" id="summaryCards"></div>
   <div class="sub-title">目标与绩效完成情况</div>
   <div class="chart-box" id="summaryChart"></div>
@@ -265,14 +256,12 @@ var SUMMARY_4 = {};
   });
 })();
 
-// Chart region order (European regions first, then functional depts, then Americas)
+// Chart region order
 var CHART_REGION_ORDER = [
   "德国区","英国区","捷克区","波兰区","法国区","意大利区","西班牙区","澳洲区","日本区","韩国区",
   "海外销售部","欧亚渠道组","美洲渠道组","美洲区交付管理部","美洲区商务部","欧洲区商务部","欧洲区交付管理部",
   "新泽西区","加州区","亚特兰大区","萨凡纳区","芝加哥区","墨西哥区","加拿大区","达拉斯区","西雅图区","迈阿密区","休斯顿区","诺福克区"
 ];
-
-var summaryViewMode = 'target';
 
 // ========== Utilities ==========
 function rateClass(rate) {
@@ -284,6 +273,11 @@ function rateClass(rate) {
 function flowTagClass(flow) {
   var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
   return doneFlows.indexOf(flow) >= 0 ? 'done' : 'pending';
+}
+
+function isDoneFlow(flow) {
+  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
+  return doneFlows.indexOf(flow) >= 0;
 }
 
 function escapeHtml(s) {
@@ -303,41 +297,51 @@ function safeInitChart(domId) {
   } catch(e) { console.error('Chart init error:', e); return null; }
 }
 
-// ========== Summary Cards ==========
+function sortRowsByStatus(rows) {
+  return rows.slice().sort(function(a,b) {
+    var aDone = isDoneFlow(a['当前流程'] || '') ? 1 : 0;
+    var bDone = isDoneFlow(b['当前流程'] || '') ? 1 : 0;
+    return aDone - bDone;
+  });
+}
+
+// ========== Summary Cards (card-table layout) ==========
 function renderSummaryCards() {
   var container = document.getElementById('summaryCards');
   var html = '';
   SUMMARY_CATS.forEach(function(cat) {
     var d = SUMMARY_4[cat];
-    var viewData = summaryViewMode === 'target' ? d.target : d.perf;
-    html += '<div class="overview-card" onclick="showSummaryDrill(\x27' + cat + '\x27)">';
+    html += '<div class="overview-card">';
     html += '<div class="card-title">' + escapeHtml(cat) + '</div>';
-    html += '<div class="big-rate">' + viewData.rate + '%</div>';
-    html += '<div class="card-meta">' + viewData.total + '人 | ' + viewData.done + '已完成</div>';
-    html += '</div>';
+    html += '<table class="card-table"><tr>';
+    html += '<td class="perf-hdr">绩效完成率</td>';
+    html += '<td class="target-hdr">目标完成率</td>';
+    html += '</tr><tr>';
+    html += '<td data-category="' + escapeHtml(cat) + '" data-mode="perf" onclick="showSummaryDrill(this)">';
+    html += '<div class="rate-val">' + d.perf.rate + '%</div>';
+    html += '<div class="meta-val">' + d.perf.total + '人 | ' + d.perf.done + '已完成</div></td>';
+    html += '<td data-category="' + escapeHtml(cat) + '" data-mode="target" onclick="showSummaryDrill(this)">';
+    html += '<div class="rate-val">' + d.target.rate + '%</div>';
+    html += '<div class="meta-val">' + d.target.total + '人 | ' + d.target.done + '已完成</div></td>';
+    html += '</tr></table></div>';
   });
   container.innerHTML = html;
 }
 
-function toggleSummaryView(mode) {
-  summaryViewMode = mode;
-  document.querySelectorAll('.summary-toggle .toggle-btn').forEach(function(btn) {
-    btn.classList.toggle('active', btn.dataset.view === mode);
-  });
-  renderSummaryCards();
-}
-
-// ========== Summary Drill-down ==========
-function showSummaryDrill(category) {
+// ========== Summary Drill-down (mode-aware) ==========
+function showSummaryDrill(el) {
+  var category = el.dataset.category || el.getAttribute('data-category');
+  var mode = el.dataset.mode || el.getAttribute('data-mode');
   var catRegions = SUMMARY_4[category].regions || [];
+
   var sidebar = [];
   catRegions.forEach(function(region) {
     var count = 0;
     DETAIL_KEYS.forEach(function(key) {
       var dd = DETAIL_DATA[key];
       if (!dd) return;
-      var pd = dd.perf[region]; if (pd) count += pd.total;
-      var td = dd.target[region]; if (td) count += td.total;
+      var rd = dd[mode][region];
+      if (rd) count += rd.total;
     });
     if (count > 0) sidebar.push({ name: region, count: count });
   });
@@ -345,7 +349,7 @@ function showSummaryDrill(category) {
 
   var sbHtml = '';
   sidebar.forEach(function(item, idx) {
-    sbHtml += '<div class="sidebar-item' + (idx === 0 ? ' active' : '') + '" data-region="' + escapeHtml(item.name) + '" data-category="' + escapeHtml(category) + '" onclick="switchDrillRegion(this)">';
+    sbHtml += '<div class="sidebar-item' + (idx === 0 ? ' active' : '') + '" data-region="' + escapeHtml(item.name) + '" data-category="' + escapeHtml(category) + '" data-mode="' + mode + '" onclick="switchDrillRegion(this)">';
     sbHtml += escapeHtml(item.name) + '<span class="sidebar-count">' + item.count + '</span></div>';
   });
   document.getElementById('modalSidebar').innerHTML = sbHtml;
@@ -357,40 +361,29 @@ function showSummaryDrill(category) {
 function switchDrillRegion(el) {
   var region = el.dataset.region || el.getAttribute('data-region');
   var category = el.dataset.category || el.getAttribute('data-category');
+  var mode = el.dataset.mode || el.getAttribute('data-mode');
   document.querySelectorAll('#modalSidebar .sidebar-item').forEach(function(item) { item.classList.remove('active'); });
   el.classList.add('active');
 
-  var perfRows = [], targetRows = [];
+  var rows = [];
   DETAIL_KEYS.forEach(function(key) {
     var dd = DETAIL_DATA[key];
     if (!dd) return;
-    var pr = dd.perf[region]; if (pr && pr.rows) perfRows = perfRows.concat(pr.rows);
-    var tr = dd.target[region]; if (tr && tr.rows) targetRows = targetRows.concat(tr.rows);
+    var rd = dd[mode][region];
+    if (rd && rd.rows) rows = rows.concat(rd.rows);
   });
 
-  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
-  function sortRows(rows) {
-    return rows.slice().sort(function(a,b) {
-      var aDone = doneFlows.indexOf(a['当前流程'] || '') >= 0 ? 1 : 0;
-      var bDone = doneFlows.indexOf(b['当前流程'] || '') >= 0 ? 1 : 0;
-      return aDone - bDone;
-    });
-  }
-  var allPerf = sortRows(perfRows);
-  var allTarget = sortRows(targetRows);
+  var sorted = sortRowsByStatus(rows);
+  var modeLabel = mode === 'perf' ? '绩效看板 (5月)' : '目标看板 (6月)';
+  var modeColor = mode === 'perf' ? '#2d6aa0' : '#52c41a';
 
-  var html = '<h3>' + escapeHtml(region) + ' - 人员明细</h3>';
-  html += '<div style="display:flex;gap:16px;margin-bottom:14px;">';
-  html += '<div style="padding:6px 14px;background:#e8f0fe;border-radius:6px;font-size:13px;"><b>绩效 (5月)</b>: ' + perfRows.length + '人</div>';
-  html += '<div style="padding:6px 14px;background:#e6f3e6;border-radius:6px;font-size:13px;"><b>目标 (6月)</b>: ' + targetRows.length + '人</div>';
-  html += '</div>';
-  if (allPerf.length > 0) {
-    html += '<h4 style="color:#2d6aa0;margin:12px 0 8px;font-size:14px;">绩效看板 (5月) - ' + allPerf.length + '人</h4>';
-    html += renderPersonTable(allPerf);
-  }
-  if (allTarget.length > 0) {
-    html += '<h4 style="color:#52c41a;margin:16px 0 8px;font-size:14px;">目标看板 (6月) - ' + allTarget.length + '人</h4>';
-    html += renderPersonTable(allTarget);
+  var html = '<h3>' + escapeHtml(region) + ' - ' + modeLabel + '</h3>';
+  html += '<div style="padding:6px 14px;background:' + (mode === 'perf' ? '#e8f0fe' : '#e6f3e6') + ';border-radius:6px;font-size:13px;display:inline-block;margin-bottom:14px;">';
+  html += '<b>' + modeLabel + '</b>: ' + rows.length + '人</div>';
+  if (sorted.length > 0) {
+    html += renderPersonTable(sorted);
+  } else {
+    html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
   document.getElementById('modalContent').innerHTML = html;
 }
@@ -459,7 +452,7 @@ function renderSummaryChart() {
   });
 }
 
-// ========== Detail Cards ==========
+// ========== Detail Cards (card-table layout) ==========
 function renderDetailCards(detailKey, containerId) {
   var dd = DETAIL_DATA[detailKey];
   if (!dd) return;
@@ -469,14 +462,19 @@ function renderDetailCards(detailKey, containerId) {
   order.forEach(function(region) {
     var td = dd.target[region] || {total:0,done:0,rate:0};
     var pd = dd.perf[region] || {total:0,done:0,rate:0};
-    html += '<div class="detail-card" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" onclick="showDetailDrill(this)">';
+    html += '<div class="detail-card">';
     html += '<div class="card-title">' + escapeHtml(region) + '</div>';
-    html += '<div class="big-rate">' + td.rate + '%</div>';
-    html += '<div class="card-meta">目标 ' + td.total + '人 | ' + td.done + '已完成</div>';
-    html += '<div class="split-row">';
-    html += '<div class="split-col left"><div class="col-label">绩效 (5月)</div><div class="col-num">' + pd.done + '/' + pd.total + '</div><div class="col-sub">' + pd.rate + '%</div></div>';
-    html += '<div class="split-col right"><div class="col-label">目标 (6月)</div><div class="col-num">' + td.done + '/' + td.total + '</div><div class="col-sub">' + td.rate + '%</div></div>';
-    html += '</div></div>';
+    html += '<table class="card-table"><tr>';
+    html += '<td class="perf-hdr">绩效</td>';
+    html += '<td class="target-hdr">目标</td>';
+    html += '</tr><tr>';
+    html += '<td data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-mode="perf" onclick="showDetailDrill(this)">';
+    html += '<div class="rate-val">' + pd.rate + '%</div>';
+    html += '<div class="meta-val">' + pd.total + '人 | ' + pd.done + '已完成</div></td>';
+    html += '<td data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-mode="target" onclick="showDetailDrill(this)">';
+    html += '<div class="rate-val">' + td.rate + '%</div>';
+    html += '<div class="meta-val">' + td.total + '人 | ' + td.done + '已完成</div></td>';
+    html += '</tr></table></div>';
   });
   container.innerHTML = html;
 }
@@ -484,36 +482,22 @@ function renderDetailCards(detailKey, containerId) {
 function showDetailDrill(el) {
   var detailKey = el.dataset.key || el.getAttribute('data-key');
   var region = el.dataset.region || el.getAttribute('data-region');
+  var mode = el.dataset.mode || el.getAttribute('data-mode');
   var dd = DETAIL_DATA[detailKey];
   if (!dd) return;
 
-  var pRows = (dd.perf[region] && dd.perf[region].rows) || [];
-  var tRows = (dd.target[region] && dd.target[region].rows) || [];
-
-  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
-  function sortRows(rows) {
-    return rows.slice().sort(function(a,b) {
-      var aDone = doneFlows.indexOf(a['当前流程'] || '') >= 0 ? 1 : 0;
-      var bDone = doneFlows.indexOf(b['当前流程'] || '') >= 0 ? 1 : 0;
-      return aDone - bDone;
-    });
-  }
-  var allPerf = sortRows(pRows);
-  var allTarget = sortRows(tRows);
+  var rows = (dd[mode][region] && dd[mode][region].rows) || [];
+  var sorted = sortRowsByStatus(rows);
+  var modeLabel = mode === 'perf' ? '绩效看板 (5月)' : '目标看板 (6月)';
 
   document.getElementById('modalSidebar').innerHTML = '<div style="padding:14px;font-size:13px;color:#666;">' + escapeHtml(detailKey) + '</div>';
-  var html = '<h3>' + escapeHtml(region) + ' - 人员明细</h3>';
-  html += '<div style="display:flex;gap:16px;margin-bottom:14px;">';
-  html += '<div style="padding:6px 14px;background:#e8f0fe;border-radius:6px;font-size:13px;"><b>绩效 (5月)</b>: ' + pRows.length + '人</div>';
-  html += '<div style="padding:6px 14px;background:#e6f3e6;border-radius:6px;font-size:13px;"><b>目标 (6月)</b>: ' + tRows.length + '人</div>';
-  html += '</div>';
-  if (allPerf.length > 0) {
-    html += '<h4 style="color:#2d6aa0;margin:12px 0 8px;font-size:14px;">绩效看板 (5月) - ' + allPerf.length + '人</h4>';
-    html += renderPersonTable(allPerf);
-  }
-  if (allTarget.length > 0) {
-    html += '<h4 style="color:#52c41a;margin:16px 0 8px;font-size:14px;">目标看板 (6月) - ' + allTarget.length + '人</h4>';
-    html += renderPersonTable(allTarget);
+  var html = '<h3>' + escapeHtml(region) + ' - ' + modeLabel + '</h3>';
+  html += '<div style="padding:6px 14px;background:' + (mode === 'perf' ? '#e8f0fe' : '#e6f3e6') + ';border-radius:6px;font-size:13px;display:inline-block;margin-bottom:14px;">';
+  html += '<b>' + modeLabel + '</b>: ' + rows.length + '人</div>';
+  if (sorted.length > 0) {
+    html += renderPersonTable(sorted);
+  } else {
+    html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('show');
@@ -569,6 +553,7 @@ function renderPerfRateTable(detailKey, tableId) {
     if (!pd || pd.total === 0) return;
     var rows = pd.rows || [];
     var total = pd.total; var done = pd.done; var rate = pd.rate;
+    var pending = total - done;
     var stageCounts = { "绩效审定": 0, "HRBP审核": 0, "员工确认": 0, "HR归档": 0 };
     rows.forEach(function(r) {
       var flow = r['当前流程'] || '';
@@ -578,13 +563,15 @@ function renderPerfRateTable(detailKey, tableId) {
       else if (flow === 'HR归档') stageCounts["HR归档"]++;
     });
     html += '<tr>';
-    html += '<td>' + escapeHtml(region) + '</td>';
+    // Region name: click shows 未完成 personnel
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="绩效审定" onclick="showStagePersonnel(this)">' + stageCounts["绩效审定"] + '(' + (total > 0 ? Math.round(stageCounts["绩效审定"]/total*1000)/10 : 0) + '%)</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HRBP审核" onclick="showStagePersonnel(this)">' + stageCounts["HRBP审核"] + '(' + (total > 0 ? Math.round(stageCounts["HRBP审核"]/total*1000)/10 : 0) + '%)</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="员工确认" onclick="showStagePersonnel(this)">' + stageCounts["员工确认"] + '(' + (total > 0 ? Math.round(stageCounts["员工确认"]/total*1000)/10 : 0) + '%)</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HR归档" onclick="showStagePersonnel(this)">' + stageCounts["HR归档"] + '(' + (total > 0 ? Math.round(stageCounts["HR归档"]/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="' + rateClass(rate) + '">' + rate + '%</td>';
+    // Completion rate: click shows 已完成 personnel
+    html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
   });
   tbody.innerHTML = html;
@@ -610,15 +597,46 @@ function renderTargetRateTable(detailKey, tableId) {
       else if (flow.indexOf('目标审核') >= 0) stageCounts["目标审核"]++;
     });
     html += '<tr>';
-    html += '<td>' + escapeHtml(region) + '</td>';
+    // Region name: click shows 未完成 personnel
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="制定目标" onclick="showStagePersonnel(this)">' + stageCounts["制定目标"] + '(' + (total > 0 ? Math.round(stageCounts["制定目标"]/total*1000)/10 : 0) + '%)</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="目标审核" onclick="showStagePersonnel(this)">' + stageCounts["目标审核"] + '(' + (total > 0 ? Math.round(stageCounts["目标审核"]/total*1000)/10 : 0) + '%)</td>';
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-stage="已完成" onclick="showStagePersonnel(this)">' + done + '(' + (total > 0 ? Math.round(done/total*1000)/10 : 0) + '%)</td>';
-    html += '<td class="' + rateClass(rate) + '">' + rate + '%</td>';
+    // Completion rate: click shows 已完成 personnel
+    html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
   });
   tbody.innerHTML = html;
+}
+
+// ========== Region Filtered Drill (pending/done) ==========
+function showRegionFiltered(el) {
+  var detailKey = el.dataset.key || el.getAttribute('data-key');
+  var region = el.dataset.region || el.getAttribute('data-region');
+  var tp = el.dataset.tp || el.getAttribute('data-tp');
+  var filter = el.dataset.filter || el.getAttribute('data-filter');
+
+  var dd = DETAIL_DATA[detailKey];
+  if (!dd) return;
+  var rows = (dd[tp][region] && dd[tp][region].rows) || [];
+  var filtered = rows.filter(function(r) {
+    var flow = r['当前流程'] || '';
+    if (filter === 'done') return isDoneFlow(flow);
+    return !isDoneFlow(flow);
+  });
+
+  var tpLabel = tp === 'perf' ? '绩效看板(5月)' : '目标看板(6月)';
+  var filterLabel = filter === 'done' ? '已完成' : '未完成';
+  document.getElementById('modalSidebar').innerHTML = '<div style="padding:14px;font-size:13px;color:#666;">' + escapeHtml(region) + ' / ' + filterLabel + '</div>';
+  var html = '<h3>' + escapeHtml(region) + ' - ' + tpLabel + ' - ' + filterLabel + ' (' + filtered.length + '人)</h3>';
+  if (filtered.length > 0) {
+    html += renderPersonTable(sortRowsByStatus(filtered));
+  } else {
+    html += '<p style="color:#999;font-size:13px;">暂无' + filterLabel + '人员</p>';
+  }
+  document.getElementById('modalContent').innerHTML = html;
+  document.getElementById('modalOverlay').classList.add('show');
 }
 
 // ========== Stage Personnel Drill ==========
@@ -631,10 +649,9 @@ function showStagePersonnel(el) {
   var dd = DETAIL_DATA[detailKey];
   if (!dd) return;
   var rows = (dd[tp][region] && dd[tp][region].rows) || [];
-  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
   var filtered = rows.filter(function(r) {
     var flow = r['当前流程'] || '';
-    if (stage === '已完成') return doneFlows.indexOf(flow) >= 0;
+    if (stage === '已完成') return isDoneFlow(flow);
     if (stage === '绩效审定') return flow.indexOf('绩效审定') >= 0;
     return flow === stage || flow.indexOf(stage) >= 0;
   });
@@ -642,7 +659,11 @@ function showStagePersonnel(el) {
   document.getElementById('modalSidebar').innerHTML = '<div style="padding:14px;font-size:13px;color:#666;">' + escapeHtml(region) + ' / ' + escapeHtml(stage) + '</div>';
   var tpLabel = tp === 'perf' ? '绩效看板(5月)' : '目标看板(6月)';
   var html = '<h3>' + escapeHtml(region) + ' - ' + tpLabel + ' - ' + escapeHtml(stage) + ' (' + filtered.length + '人)</h3>';
-  html += renderPersonTable(filtered);
+  if (filtered.length > 0) {
+    html += renderPersonTable(filtered);
+  } else {
+    html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
+  }
   document.getElementById('modalContent').innerHTML = html;
   document.getElementById('modalOverlay').classList.add('show');
 }
