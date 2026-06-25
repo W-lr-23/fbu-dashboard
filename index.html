@@ -160,7 +160,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail1Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail1Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail1PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>绩效审定<br>(大区内)</th><th>HRBP审核</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail1PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail1TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -169,7 +169,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail2Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail2Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail2PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>绩效审定<br>(大区内)</th><th>HRBP审核</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail2PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail2TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -178,7 +178,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail3Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail3Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail3PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>绩效审定<br>(大区内)</th><th>HRBP审核</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail3PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail3TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -187,7 +187,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail4Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail4Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail4PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>绩效审定<br>(大区内)</th><th>HRBP审核</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail4PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail4TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -248,7 +248,7 @@ var SUMMARY_4 = {};
       var td = dd.target[region];
       var pd = dd.perf[region];
       if (td) { SUMMARY_4[cat].target.total += td.total; SUMMARY_4[cat].target.done += td.done; }
-      if (pd) { SUMMARY_4[cat].perf.total += pd.total; SUMMARY_4[cat].perf.done += pd.done; }
+      if (pd) { SUMMARY_4[cat].perf.total += pd.total; SUMMARY_4[cat].perf.done += countPerfDone(pd.rows); }
     });
   });
   SUMMARY_CATS.forEach(function(cat) {
@@ -275,13 +275,20 @@ function rateClass(rate) {
 }
 
 function flowTagClass(flow) {
-  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
+  var doneFlows = ["绩效审定（大区内）","HRBP审核","员工确认","HR归档"];
   return doneFlows.indexOf(flow) >= 0 ? 'done' : 'pending';
 }
 
 function isDoneFlow(flow) {
-  var doneFlows = ["已完成","HR归档","员工确认","绩效确认","绩效确认（大区内）"];
+  var doneFlows = ["绩效审定（大区内）","HRBP审核","员工确认","HR归档"];
   return doneFlows.indexOf(flow) >= 0;
+}
+
+// Dynamically count perf done from rows (pre-calculated done uses old definition)
+function countPerfDone(rows) {
+  var c = 0;
+  (rows || []).forEach(function(r) { if (isDoneFlow(r['当前流程'] || '')) c++; });
+  return c;
 }
 
 function escapeHtml(s) {
@@ -421,7 +428,7 @@ function renderSummaryChart() {
       if (!regionData[region]) regionData[region] = { target: {total:0,done:0}, perf: {total:0,done:0} };
       var td = dd.target[region]; var pd = dd.perf[region];
       if (td) { regionData[region].target.total += td.total; regionData[region].target.done += td.done; }
-      if (pd) { regionData[region].perf.total += pd.total; regionData[region].perf.done += pd.done; }
+      if (pd) { regionData[region].perf.total += pd.total; regionData[region].perf.done += countPerfDone(pd.rows); }
     });
   });
   var xData = [];
@@ -475,6 +482,8 @@ function renderDetailCards(detailKey, containerId) {
   order.forEach(function(region) {
     var td = dd.target[region] || {total:0,done:0,rate:0};
     var pd = dd.perf[region] || {total:0,done:0,rate:0};
+    var perfDone = countPerfDone(pd.rows);
+    var perfRate = pd.total > 0 ? Math.round(perfDone / pd.total * 1000) / 10 : 0;
     html += '<div class="detail-card">';
     html += '<div class="card-title">' + escapeHtml(region) + '</div>';
     html += '<table class="card-table"><tr>';
@@ -482,8 +491,8 @@ function renderDetailCards(detailKey, containerId) {
     html += '<td class="target-hdr">目标</td>';
     html += '</tr><tr>';
     html += '<td data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-mode="perf" onclick="showDetailDrill(this)">';
-    html += '<div class="rate-val">' + pd.rate + '%</div>';
-    html += '<div class="meta-val">' + pd.total + '人 | ' + pd.done + '已完成</div></td>';
+    html += '<div class="rate-val">' + perfRate + '%</div>';
+    html += '<div class="meta-val">' + pd.total + '人 | ' + perfDone + '已完成</div></td>';
     html += '<td data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-mode="target" onclick="showDetailDrill(this)">';
     html += '<div class="rate-val">' + td.rate + '%</div>';
     html += '<div class="meta-val">' + td.total + '人 | ' + td.done + '已完成</div></td>';
@@ -528,10 +537,11 @@ function renderDetailChart(detailKey, chartId) {
   order.forEach(function(region) {
     var td = dd.target[region] || {total:0,done:0,rate:0};
     var pd = dd.perf[region] || {total:0,done:0,rate:0};
+    var pdDone = countPerfDone(pd.rows);
     xData.push(region);
-    perfDone.push(pd.done); perfPending.push(pd.total - pd.done);
+    perfDone.push(pdDone); perfPending.push(pd.total - pdDone);
     targetDone.push(td.done); targetPending.push(td.total - td.done);
-    perfRates.push(pd.rate); targetRates.push(td.rate);
+    perfRates.push(pd.total > 0 ? Math.round(pdDone / pd.total * 1000) / 10 : 0); targetRates.push(td.rate);
   });
   chart.setOption({
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
@@ -572,24 +582,15 @@ function renderPerfRateTable(detailKey, tableId) {
     var pd = dd.perf[region];
     if (!pd || pd.total === 0) return;
     var rows = pd.rows || [];
-    var total = pd.total; var done = pd.done; var rate = pd.rate;
-    var pending = total - done;
-    var stageCounts = { "绩效审定": 0, "HRBP审核": 0, "员工确认": 0, "HR归档": 0 };
-    rows.forEach(function(r) {
-      var flow = r['当前流程'] || '';
-      if (flow.indexOf('绩效审定') >= 0) stageCounts["绩效审定"]++;
-      else if (flow === 'HRBP审核') stageCounts["HRBP审核"]++;
-      else if (flow === '员工确认') stageCounts["员工确认"]++;
-      else if (flow === 'HR归档') stageCounts["HR归档"]++;
-    });
+    var total = pd.total;
+    var done = countPerfDone(rows);
+    var rate = total > 0 ? Math.round(done / total * 1000) / 10 : 0;
     html += '<tr>';
     // Region name: click shows 未完成 personnel
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="绩效审定" onclick="showStagePersonnel(this)">' + stageCounts["绩效审定"] + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HRBP审核" onclick="showStagePersonnel(this)">' + stageCounts["HRBP审核"] + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="员工确认" onclick="showStagePersonnel(this)">' + stageCounts["员工确认"] + '</td>';
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HR归档" onclick="showStagePersonnel(this)">' + stageCounts["HR归档"] + '</td>';
+    // 已完成 count: click shows 已完成 personnel
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + done + '</td>';
     // Completion rate: click shows 已完成 personnel
     html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
