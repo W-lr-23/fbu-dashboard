@@ -412,7 +412,7 @@ function switchDrillRegion(el) {
   html += '<div style="padding:6px 14px;background:' + (mode === 'perf' ? '#e0e8f0' : '#e6f3e6') + ';border-radius:6px;font-size:13px;display:inline-block;margin-bottom:14px;">';
   html += '<b>' + modeLabel + '</b>: ' + rows.length + '人</div>';
   if (sorted.length > 0) {
-    html += renderPersonTable(sorted, mode);
+    html += renderSummaryPersonTable(sorted, mode, region);
   } else {
     html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
@@ -429,6 +429,25 @@ function renderPersonTable(rows, type) {
     html += '<td><span class="flow-tag ' + flowCls + '">' + escapeHtml(r['当前流程'] || '') + '</span></td>';
     html += '<td>' + escapeHtml(r['当前处理人'] || '-') + '</td>';
     html += '<td>' + escapeHtml(r['四级部门'] || '') + '</td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  return html;
+}
+
+function renderSummaryPersonTable(rows, type, region) {
+  var html = '<table class="data-table"><thead><tr><th>区域</th><th>姓名</th><th>工号</th><th>当前流程</th><th>当前审批人</th><th>状态</th></tr></thead><tbody>';
+  rows.forEach(function(r) {
+    var done = isDone(r['当前流程'] || '', type);
+    var statusCls = done ? 'done' : 'pending';
+    var statusText = done ? '已完成' : '未完成';
+    html += '<tr>';
+    html += '<td>' + escapeHtml(region) + '</td>';
+    html += '<td>' + escapeHtml(r['姓名'] || '') + '</td>';
+    html += '<td>' + escapeHtml(r['工号'] || '') + '</td>';
+    html += '<td><span class="flow-tag ' + statusCls + '">' + escapeHtml(r['当前流程'] || '') + '</span></td>';
+    html += '<td>' + escapeHtml(r['当前处理人'] || '-') + '</td>';
+    html += '<td><span class="flow-tag ' + statusCls + '">' + statusText + '</span></td>';
     html += '</tr>';
   });
   html += '</tbody></table>';
