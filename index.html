@@ -160,7 +160,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail1Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail1Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail1PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail1PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail1TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -169,7 +169,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail2Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail2Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail2PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail2PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail2TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -178,7 +178,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail3Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail3Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail3PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail3PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail3TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -187,7 +187,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail4Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail4Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
-  <table class="data-table" id="detail4PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
+  <table class="data-table" id="detail4PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
   <div class="sub-title">目标完成率明细表</div>
   <table class="data-table" id="detail4TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
@@ -274,14 +274,26 @@ function rateClass(rate) {
   return 'rate-bad';
 }
 
-function flowTagClass(flow) {
-  var doneFlows = ["绩效审定（大区内）","HRBP审核","员工确认","HR归档"];
-  return doneFlows.indexOf(flow) >= 0 ? 'done' : 'pending';
+function flowTagClass(flow, type) {
+  if (type === 'target') {
+    return flow === '已完成' ? 'done' : 'pending';
+  }
+  var perfDone = ["员工确认","HR归档"];
+  return perfDone.indexOf(flow) >= 0 ? 'done' : 'pending';
 }
 
 function isDoneFlow(flow) {
-  var doneFlows = ["绩效审定（大区内）","HRBP审核","员工确认","HR归档"];
+  var doneFlows = ["员工确认","HR归档"];
   return doneFlows.indexOf(flow) >= 0;
+}
+
+function isTargetDone(flow) {
+  return flow === '已完成';
+}
+
+function isDone(flow, type) {
+  if (type === 'target') return isTargetDone(flow);
+  return isDoneFlow(flow);
 }
 
 // Dynamically count perf done from rows (pre-calculated done uses old definition)
@@ -308,10 +320,10 @@ function safeInitChart(domId) {
   } catch(e) { console.error('Chart init error:', e); return null; }
 }
 
-function sortRowsByStatus(rows) {
+function sortRowsByStatus(rows, type) {
   return rows.slice().sort(function(a,b) {
-    var aDone = isDoneFlow(a['当前流程'] || '') ? 1 : 0;
-    var bDone = isDoneFlow(b['当前流程'] || '') ? 1 : 0;
+    var aDone = isDone(a['当前流程'] || '', type) ? 1 : 0;
+    var bDone = isDone(b['当前流程'] || '', type) ? 1 : 0;
     return aDone - bDone;
   });
 }
@@ -384,7 +396,7 @@ function switchDrillRegion(el) {
     if (rd && rd.rows) rows = rows.concat(rd.rows);
   });
 
-  var sorted = sortRowsByStatus(rows);
+  var sorted = sortRowsByStatus(rows, mode);
   var modeLabel = mode === 'perf' ? '绩效看板 (5月)' : '目标看板 (6月)';
   var modeColor = mode === 'perf' ? '#2d5580' : '#52c41a';
 
@@ -392,17 +404,17 @@ function switchDrillRegion(el) {
   html += '<div style="padding:6px 14px;background:' + (mode === 'perf' ? '#e0e8f0' : '#e6f3e6') + ';border-radius:6px;font-size:13px;display:inline-block;margin-bottom:14px;">';
   html += '<b>' + modeLabel + '</b>: ' + rows.length + '人</div>';
   if (sorted.length > 0) {
-    html += renderPersonTable(sorted);
+    html += renderPersonTable(sorted, mode);
   } else {
     html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
   document.getElementById('modalContent').innerHTML = html;
 }
 
-function renderPersonTable(rows) {
+function renderPersonTable(rows, type) {
   var html = '<table class="data-table"><thead><tr><th>姓名</th><th>工号</th><th>当前流程</th><th>当前审批人</th><th>四级部门</th></tr></thead><tbody>';
   rows.forEach(function(r) {
-    var flowCls = flowTagClass(r['当前流程'] || '');
+    var flowCls = flowTagClass(r['当前流程'] || '', type);
     html += '<tr>';
     html += '<td>' + escapeHtml(r['姓名'] || '') + '</td>';
     html += '<td>' + escapeHtml(r['工号'] || '') + '</td>';
@@ -509,7 +521,7 @@ function showDetailDrill(el) {
   if (!dd) return;
 
   var rows = (dd[mode][region] && dd[mode][region].rows) || [];
-  var sorted = sortRowsByStatus(rows);
+  var sorted = sortRowsByStatus(rows, mode);
   var modeLabel = mode === 'perf' ? '绩效看板 (5月)' : '目标看板 (6月)';
 
   document.getElementById('modalSidebar').innerHTML = '<div style="padding:14px;font-size:13px;color:#666;">' + escapeHtml(detailKey) + '</div>';
@@ -517,7 +529,7 @@ function showDetailDrill(el) {
   html += '<div style="padding:6px 14px;background:' + (mode === 'perf' ? '#e0e8f0' : '#e6f3e6') + ';border-radius:6px;font-size:13px;display:inline-block;margin-bottom:14px;">';
   html += '<b>' + modeLabel + '</b>: ' + rows.length + '人</div>';
   if (sorted.length > 0) {
-    html += renderPersonTable(sorted);
+    html += renderPersonTable(sorted, mode);
   } else {
     html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
@@ -584,13 +596,25 @@ function renderPerfRateTable(detailKey, tableId) {
     var rows = pd.rows || [];
     var total = pd.total;
     var done = countPerfDone(rows);
+    var pending = total - done;
     var rate = total > 0 ? Math.round(done / total * 1000) / 10 : 0;
+    // Count individual stages
+    var empConfirm = 0, hrArchive = 0;
+    rows.forEach(function(r) {
+      var flow = r['当前流程'] || '';
+      if (flow === '员工确认') empConfirm++;
+      else if (flow === 'HR归档') hrArchive++;
+    });
     html += '<tr>';
     // Region name: click shows 未完成 personnel
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
     html += '<td>' + total + '</td>';
-    // 已完成 count: click shows 已完成 personnel
-    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + done + '</td>';
+    // 未完成: click shows pending personnel
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="pending" onclick="showRegionFiltered(this)">' + pending + '</td>';
+    // 员工确认: click shows personnel in this stage
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="员工确认" onclick="showStagePersonnel(this)">' + empConfirm + '</td>';
+    // HR归档: click shows personnel in this stage
+    html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-stage="HR归档" onclick="showStagePersonnel(this)">' + hrArchive + '</td>';
     // Completion rate: click shows 已完成 personnel
     html += '<td class="clickable-cell ' + rateClass(rate) + '" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="perf" data-filter="done" onclick="showRegionFiltered(this)">' + rate + '%</td>';
     html += '</tr>';
@@ -643,8 +667,8 @@ function showRegionFiltered(el) {
   var rows = (dd[tp][region] && dd[tp][region].rows) || [];
   var filtered = rows.filter(function(r) {
     var flow = r['当前流程'] || '';
-    if (filter === 'done') return isDoneFlow(flow);
-    return !isDoneFlow(flow);
+    if (filter === 'done') return isDone(flow, tp);
+    return !isDone(flow, tp);
   });
 
   var tpLabel = tp === 'perf' ? '绩效看板(5月)' : '目标看板(6月)';
@@ -652,7 +676,7 @@ function showRegionFiltered(el) {
   document.getElementById('modalSidebar').innerHTML = '<div style="padding:14px;font-size:13px;color:#666;">' + escapeHtml(region) + ' / ' + filterLabel + '</div>';
   var html = '<h3>' + escapeHtml(region) + ' - ' + tpLabel + ' - ' + filterLabel + ' (' + filtered.length + '人)</h3>';
   if (filtered.length > 0) {
-    html += renderPersonTable(sortRowsByStatus(filtered));
+    html += renderPersonTable(sortRowsByStatus(filtered, tp), tp);
   } else {
     html += '<p style="color:#999;font-size:13px;">暂无' + filterLabel + '人员</p>';
   }
@@ -681,7 +705,7 @@ function showStagePersonnel(el) {
   var tpLabel = tp === 'perf' ? '绩效看板(5月)' : '目标看板(6月)';
   var html = '<h3>' + escapeHtml(region) + ' - ' + tpLabel + ' - ' + escapeHtml(stage) + ' (' + filtered.length + '人)</h3>';
   if (filtered.length > 0) {
-    html += renderPersonTable(filtered);
+    html += renderPersonTable(filtered, tp);
   } else {
     html += '<p style="color:#999;font-size:13px;">暂无数据</p>';
   }
