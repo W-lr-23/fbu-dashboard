@@ -157,7 +157,6 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 </div>
 <div class="dashboard-section" id="sec-detail1">
   <div class="section-header"><div class="icon">1</div>海外销售&amp;大区商务部&amp;渠道部</div>
-  <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail1Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail1Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
   <table class="data-table" id="detail1PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
@@ -166,7 +165,6 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 </div>
 <div class="dashboard-section" id="sec-detail2">
   <div class="section-header"><div class="icon">2</div>渠道&amp;行政&amp;HRBP</div>
-  <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail2Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail2Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
   <table class="data-table" id="detail2PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
@@ -175,7 +173,6 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 </div>
 <div class="dashboard-section" id="sec-detail3">
   <div class="section-header"><div class="icon">3</div>海外仓</div>
-  <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail3Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail3Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
   <table class="data-table" id="detail3PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
@@ -184,7 +181,6 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 </div>
 <div class="dashboard-section" id="sec-detail4">
   <div class="section-header"><div class="icon">4</div>海外区长</div>
-  <div class="sub-title">各区域概览</div><div class="detail-overview-grid" id="detail4Cards"></div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail4Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
   <table class="data-table" id="detail4PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
@@ -216,13 +212,17 @@ function regionToCategory(region) {
   for (var i = 0; i < funcDepts.length; i++) {
     if (r === funcDepts[i]) return "职能部门";
   }
-  var euroRegions = ["英国区","德国区","捷克区","法国区","波兰区","西班牙区","意大利区","澳洲区","日本区","韩国区"];
+  var euroRegions = ["英国区","德国区","捷克区","法国区","波兰区","西班牙区","意大利区"];
   for (var i = 0; i < euroRegions.length; i++) {
     if (r === euroRegions[i]) return "欧洲";
   }
   var amerRegions = ["新泽西区","加州区","亚特兰大区","芝加哥区","达拉斯区","萨凡纳区","迈阿密区","休斯顿区","加拿大区","墨西哥区","西雅图区","诺福克区"];
   for (var i = 0; i < amerRegions.length; i++) {
     if (r === amerRegions[i]) return "美洲";
+  }
+  var apacRegions = ["澳洲区","日本区","韩国区"];
+  for (var i = 0; i < apacRegions.length; i++) {
+    if (r === apacRegions[i]) return "亚太";
   }
   if (r.indexOf("新西兰") >= 0 || r.indexOf("新加坡") >= 0) return "亚太";
   if (r.indexOf("美洲") >= 0) return "美洲";
@@ -262,9 +262,10 @@ var SUMMARY_4 = {};
 
 // Chart region order
 var CHART_REGION_ORDER = [
-  "德国区","英国区","捷克区","波兰区","法国区","意大利区","西班牙区","澳洲区","日本区","韩国区",
+  "德国区","英国区","捷克区","波兰区","法国区","意大利区","西班牙区",
   "海外销售部","欧亚渠道组","美洲渠道组","美洲区交付管理部","美洲区商务部","欧洲区商务部","欧洲区交付管理部",
-  "新泽西区","加州区","亚特兰大区","萨凡纳区","芝加哥区","墨西哥区","加拿大区","达拉斯区","西雅图区","迈阿密区","休斯顿区","诺福克区"
+  "新泽西区","加州区","亚特兰大区","萨凡纳区","芝加哥区","墨西哥区","加拿大区","达拉斯区","西雅图区","迈阿密区","休斯顿区","诺福克区",
+  "澳洲区","日本区","韩国区"
 ];
 
 // ========== Utilities ==========
@@ -780,7 +781,6 @@ function initAll() {
   DETAIL_KEYS.forEach(function(key, idx) {
     try {
       var detailId = DETAIL_IDS[idx];
-      renderDetailCards(key, detailId + 'Cards');
       renderDetailChart(key, detailId + 'Chart');
       renderPerfRateTable(key, detailId + 'PerfTable');
       renderTargetRateTable(key, detailId + 'TargetTable');
