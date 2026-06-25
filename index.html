@@ -247,7 +247,7 @@ var SUMMARY_4 = {};
       if (SUMMARY_4[cat].regions.indexOf(region) < 0) SUMMARY_4[cat].regions.push(region);
       var td = dd.target[region];
       var pd = dd.perf[region];
-      if (td) { SUMMARY_4[cat].target.total += td.total; SUMMARY_4[cat].target.done += td.done; }
+      if (td) { SUMMARY_4[cat].target.total += td.total; SUMMARY_4[cat].target.done += countTargetDone(td.rows); }
       if (pd) { SUMMARY_4[cat].perf.total += pd.total; SUMMARY_4[cat].perf.done += countPerfDone(pd.rows); }
     });
   });
@@ -300,6 +300,13 @@ function isDone(flow, type) {
 function countPerfDone(rows) {
   var c = 0;
   (rows || []).forEach(function(r) { if (isDoneFlow(r['当前流程'] || '')) c++; });
+  return c;
+}
+
+// Dynamically count target done from rows (count actual 已完成 flow)
+function countTargetDone(rows) {
+  var c = 0;
+  (rows || []).forEach(function(r) { if ((r['当前流程'] || '') === '已完成') c++; });
   return c;
 }
 
@@ -439,7 +446,7 @@ function renderSummaryChart() {
     order.forEach(function(region) {
       if (!regionData[region]) regionData[region] = { target: {total:0,done:0}, perf: {total:0,done:0} };
       var td = dd.target[region]; var pd = dd.perf[region];
-      if (td) { regionData[region].target.total += td.total; regionData[region].target.done += td.done; }
+      if (td) { regionData[region].target.total += td.total; regionData[region].target.done += countTargetDone(td.rows); }
       if (pd) { regionData[region].perf.total += pd.total; regionData[region].perf.done += countPerfDone(pd.rows); }
     });
   });
@@ -496,6 +503,8 @@ function renderDetailCards(detailKey, containerId) {
     var pd = dd.perf[region] || {total:0,done:0,rate:0};
     var perfDone = countPerfDone(pd.rows);
     var perfRate = pd.total > 0 ? Math.round(perfDone / pd.total * 1000) / 10 : 0;
+    var targetDone = countTargetDone(td.rows);
+    var targetRate = td.total > 0 ? Math.round(targetDone / td.total * 1000) / 10 : 0;
     html += '<div class="detail-card">';
     html += '<div class="card-title">' + escapeHtml(region) + '</div>';
     html += '<table class="card-table"><tr>';
@@ -506,8 +515,8 @@ function renderDetailCards(detailKey, containerId) {
     html += '<div class="rate-val">' + perfRate + '%</div>';
     html += '<div class="meta-val">' + pd.total + '人 | ' + perfDone + '已完成</div></td>';
     html += '<td data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-mode="target" onclick="showDetailDrill(this)">';
-    html += '<div class="rate-val">' + td.rate + '%</div>';
-    html += '<div class="meta-val">' + td.total + '人 | ' + td.done + '已完成</div></td>';
+    html += '<div class="rate-val">' + targetRate + '%</div>';
+    html += '<div class="meta-val">' + td.total + '人 | ' + targetDone + '已完成</div></td>';
     html += '</tr></table></div>';
   });
   container.innerHTML = html;
@@ -550,10 +559,11 @@ function renderDetailChart(detailKey, chartId) {
     var td = dd.target[region] || {total:0,done:0,rate:0};
     var pd = dd.perf[region] || {total:0,done:0,rate:0};
     var pdDone = countPerfDone(pd.rows);
+    var tdDone = countTargetDone(td.rows);
     xData.push(region);
     perfDone.push(pdDone); perfPending.push(pd.total - pdDone);
-    targetDone.push(td.done); targetPending.push(td.total - td.done);
-    perfRates.push(pd.total > 0 ? Math.round(pdDone / pd.total * 1000) / 10 : 0); targetRates.push(td.rate);
+    targetDone.push(tdDone); targetPending.push(td.total - tdDone);
+    perfRates.push(pd.total > 0 ? Math.round(pdDone / pd.total * 1000) / 10 : 0); targetRates.push(td.total > 0 ? Math.round(tdDone / td.total * 1000) / 10 : 0);
   });
   chart.setOption({
     tooltip: { trigger: 'axis', axisPointer: { type: 'shadow' } },
@@ -634,13 +644,16 @@ function renderTargetRateTable(detailKey, tableId) {
     var td = dd.target[region];
     if (!td || td.total === 0) return;
     var rows = td.rows || [];
-    var total = td.total; var done = td.done; var rate = td.rate;
-    var stageCounts = { "制定目标": 0, "目标审核": 0 };
+    var total = td.total;
+    var stageCounts = { "制定目标": 0, "目标审核": 0, "已完成": 0 };
     rows.forEach(function(r) {
       var flow = r['当前流程'] || '';
       if (flow.indexOf('制定') >= 0) stageCounts["制定目标"]++;
       else if (flow.indexOf('目标审核') >= 0) stageCounts["目标审核"]++;
+      else if (flow === '已完成') stageCounts["已完成"]++;
     });
+    var done = stageCounts["已完成"];
+    var rate = total > 0 ? Math.round(done / total * 1000) / 10 : 0;
     html += '<tr>';
     // Region name: click shows 未完成 personnel
     html += '<td class="clickable-cell" data-key="' + escapeHtml(detailKey) + '" data-region="' + escapeHtml(region) + '" data-tp="target" data-filter="pending" onclick="showRegionFiltered(this)">' + escapeHtml(region) + '</td>';
@@ -696,7 +709,7 @@ function showStagePersonnel(el) {
   var rows = (dd[tp][region] && dd[tp][region].rows) || [];
   var filtered = rows.filter(function(r) {
     var flow = r['当前流程'] || '';
-    if (stage === '已完成') return isDoneFlow(flow);
+    if (stage === '已完成') return isDone(flow, tp);
     if (stage === '绩效审定') return flow.indexOf('绩效审定') >= 0;
     return flow === stage || flow.indexOf(stage) >= 0;
   });
