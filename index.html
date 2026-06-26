@@ -144,7 +144,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
 <div class="nav-wrap"><div class="nav-tabs" id="navTabs">
   <a class="nav-tab active" href="#sec-summary" data-sec="sec-summary">汇总看板</a>
   <a class="nav-tab" href="#sec-detail1" data-sec="sec-detail1">海外销售&amp;大区商务部&amp;渠道部</a>
-  <a class="nav-tab" href="#sec-detail5" data-sec="sec-detail5">区域-除区长</a>
+  <a class="nav-tab" href="#sec-detail5" data-sec="sec-detail5">区域（除大区区长）</a>
   <a class="nav-tab" href="#sec-detail2" data-sec="sec-detail2">渠道&amp;行政&amp;HRBP</a>
   <a class="nav-tab" href="#sec-detail3" data-sec="sec-detail3">海外仓</a>
   <a class="nav-tab" href="#sec-detail4" data-sec="sec-detail4">海外区长</a>
@@ -166,7 +166,7 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <table class="data-table" id="detail1TargetTable"><thead><tr><th>区域</th><th>总人数</th><th>制定目标</th><th>目标审核</th><th>已完成</th><th>完成率</th></tr></thead><tbody></tbody></table>
 </div>
 <div class="dashboard-section" id="sec-detail5">
-  <div class="section-header"><div class="icon">★</div>区域-除区长</div>
+  <div class="section-header"><div class="icon">★</div>区域（除大区区长）</div>
   <div class="sub-title">目标与绩效完成情况</div><div class="chart-box" id="detail5Chart"></div>
   <div class="sub-title">绩效完成率明细表</div>
   <table class="data-table" id="detail5PerfTable"><thead><tr><th>区域</th><th>总人数</th><th>未完成</th><th>员工确认</th><th>HR归档</th><th>完成率</th></tr></thead><tbody></tbody></table>
@@ -215,7 +215,7 @@ var RATE_TABLES = {"detail1": [{"region": "欧亚渠道组", "dept4": "欧亚渠
 var perf_month = '5';
 var target_month = '6';
 // ========== Config ==========
-var DETAIL_KEYS = ["海外销售&大区商务部&渠道部","区域-除区长","渠道&行政&HRBP","海外仓","海外区长"];
+var DETAIL_KEYS = ["海外销售&大区商务部&渠道部","区域（除大区区长）","渠道&行政&HRBP","海外仓","海外区长"];
 var DETAIL_IDS = ["detail1","detail5","detail2","detail3","detail4"];
 var SUMMARY_KEYS = ["海外销售&大区商务部&渠道部","渠道&行政&HRBP","海外仓","海外区长"];
 var chartInstances = {};
@@ -276,7 +276,7 @@ function computeSummary() {
   });
 }
 
-// Merge 渠道&行政&HRBP + 海外仓 into combined "区域-除区长" detail
+// Merge 渠道&行政&HRBP + 海外仓 into combined "区域（除大区区长）" detail
 function mergeCombinedDetail() {
   var src1 = DETAIL_DATA["渠道&行政&HRBP"];
   var src2 = DETAIL_DATA["海外仓"];
@@ -295,7 +295,7 @@ function mergeCombinedDetail() {
       });
     });
   });
-  DETAIL_DATA["区域-除区长"] = combined;
+  DETAIL_DATA["区域（除大区区长）"] = combined;
 }
 mergeCombinedDetail();
 computeSummary();
