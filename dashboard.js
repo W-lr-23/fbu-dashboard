@@ -144,7 +144,11 @@ function switchDataset(dateKey) {
     var metaEl = document.getElementById('dashMeta');
     if (metaEl) {
       var selectorHTML = document.getElementById('dateSelector') ? document.getElementById('dateSelector').outerHTML : '';
-      metaEl.innerHTML = '\u7edf\u8ba1\u5468\u671f\uff1a' + meta.period + '<br>' + selectorHTML;
+      var m = dateKey.split('.')[0];
+      var d = dateKey.split('.')[1];
+      var ym = meta.period.match(/(\d{4})\u5e74\d{1,2}\u6708\d{1,2}\u65e5$/);
+      var upd = (ym ? ym[1] : new Date().getFullYear()) + '\u5e74' + m + '\u6708' + d + '\u65e5';
+      metaEl.innerHTML = '\u6570\u636e\u66f4\u65b0\u65f6\u95f4\uff1a' + upd + '<br>' + '\u7edf\u8ba1\u5468\u671f\uff1a' + meta.period + '<br>' + selectorHTML;
       var newSelector = document.getElementById('dateSelector');
       if (newSelector) { newSelector.value = dateKey; newSelector.onchange = function() { switchDataset(this.value); }; }
     }
