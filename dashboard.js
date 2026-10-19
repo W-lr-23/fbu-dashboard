@@ -182,6 +182,7 @@ function switchDataset(dateKey) {
     renderDetailChart(key, DETAIL_IDS[idx] + 'Chart');
     renderMergedRateTable(key, DETAIL_IDS[idx] + 'MergedTable');
   });
+  if (typeof syncSwitcher === 'function') syncSwitcher();
 }
 var navSetupDone = false;
 
@@ -876,4 +877,161 @@ function initAll() {
   setupNav();
 }
 document.addEventListener('DOMContentLoaded', initAll);
+
+// ========== 交互优化①：穿刺卡片悬停唤出（原 onclick 全部保留，点击仍可用） ==========
+(function () {
+  var DRILL_RE = /^(showSummaryDrill|showDetailDrill|showBothIncomplete|showAllPersonnel|showRegionFiltered|showStagePersonnel)\(this\)/;
+  var lastHoverEl = null;
+  document.addEventListener('mouseover', function (e) {
+    var t = e.target;
+    while (t && t !== document) {
+      if (t.getAttribute) {
+        var oc = t.getAttribute('onclick');
+        if (oc) {
+          var m = oc.match(DRILL_RE);
+          if (m) {
+            if (lastHoverEl === t) return;
+            lastHoverEl = t;
+            clearTimeout(window.__modalHoverCloseTimer);
+            window[m[1]](t);
+            return;
+          }
+        }
+      }
+      t = t.parentNode;
+    }
+  });
+  var overlay = document.getElementById('modalOverlay');
+  if (overlay) {
+    overlay.addEventListener('mouseenter', function () { clearTimeout(window.__modalHoverCloseTimer); });
+    overlay.addEventListener('mouseleave', function () { window.__modalHoverCloseTimer = setTimeout(closeModal, 150); });
+  }
+  var _origCloseModal = closeModal;
+  closeModal = function () {
+    clearTimeout(window.__modalHoverCloseTimer);
+    lastHoverEl = null;
+    _origCloseModal();
+  };
+})();
+
+// ========== 交互优化②：悬停日期切换日历（<< < 2026 > >> + 最新数据按钮） ==========
+var calendarSnaps = [];
+var calendarByDate = {};
+var calendarViewYear = new Date().getFullYear();
+var calendarViewMonth = new Date().getMonth() + 1;
+
+function calendarKeyToParts(key) {
+  var parts = String(key).split('.');
+  if (parts.length !== 2) return null;
+  var m = parseInt(parts[0], 10), d = parseInt(parts[1], 10);
+  if (!(m >= 1 && m <= 12 && d >= 1 && d <= 31)) return null;
+  var year = null;
+  if (typeof DATASET_META !== 'undefined' && DATASET_META[key] && DATASET_META[key].period) {
+    var ym = DATASET_META[key].period.match(/(\d{4})年/);
+    if (ym) year = parseInt(ym[1], 10);
+  }
+  if (year === null) year = calendarViewYear;
+  return { key: key, m: m, d: d, year: year };
+}
+
+function buildCalendarSnaps() {
+  calendarSnaps = [];
+  calendarByDate = {};
+  Object.keys(ALL_DATASETS || {}).forEach(function (key) {
+    var p = calendarKeyToParts(key);
+    if (!p) return;
+    var iso = p.year + '-' + String(p.m).padStart(2, '0') + '-' + String(p.d).padStart(2, '0');
+    calendarSnaps.push({ key: key, iso: iso, m: p.m, d: p.d, year: p.year, label: p.m + '月' + p.d + '日数据' });
+    calendarByDate[iso] = key;
+  });
+}
+
+function renderCalendar() {
+  var titleEl = document.getElementById('dpTitle');
+  var monthEl = document.getElementById('dpMonth');
+  var gridEl = document.getElementById('dpGrid');
+  if (!titleEl || !monthEl || !gridEl) return;
+  titleEl.textContent = String(calendarViewYear);
+  monthEl.textContent = calendarViewMonth + '月';
+  var first = new Date(calendarViewYear, calendarViewMonth - 1, 1);
+  var lead = first.getDay();
+  var daysInMonth = new Date(calendarViewYear, calendarViewMonth, 0).getDate();
+  var sel = document.getElementById('dateSelector');
+  var currentKey = sel ? sel.value : (typeof CURRENT_DATE_KEY !== 'undefined' ? CURRENT_DATE_KEY : null);
+  var html = '';
+  for (var i = 0; i < lead; i++) html += '<div class="dp-cell"></div>';
+  for (var d = 1; d <= daysInMonth; d++) {
+    var iso = calendarViewYear + '-' + String(calendarViewMonth).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+    var has = !!calendarByDate[iso];
+    var isSel = has && calendarByDate[iso] === currentKey;
+    html += '<div class="dp-cell' + (has ? ' has-data' : '') + (isSel ? ' selected' : '') + '"' + (has ? ' data-date="' + iso + '"' : '') + '>' + d + '</div>';
+  }
+  gridEl.innerHTML = html;
+}
+
+// 供 switchDataset 调用：按当前选中快照同步切换器标签与日历
+function syncSwitcher() {
+  var sel = document.getElementById('dateSelector');
+  var labelEl = document.getElementById('switcherLabel');
+  if (!sel || !labelEl) return;
+  buildCalendarSnaps();
+  var cur = null;
+  calendarSnaps.forEach(function (s) { if (s.key === sel.value) cur = s; });
+  if (cur) {
+    labelEl.textContent = cur.label;
+    calendarViewYear = cur.year;
+    calendarViewMonth = cur.m;
+  }
+  renderCalendar();
+}
+
+function openDatePicker() {
+  clearTimeout(window.__dpOpenTimer); clearTimeout(window.__dpCloseTimer);
+  var p = document.getElementById('datePicker');
+  if (p) p.classList.add('open');
+}
+function closeDatePicker() {
+  clearTimeout(window.__dpOpenTimer);
+  var p = document.getElementById('datePicker');
+  if (p) p.classList.remove('open');
+}
+function scheduleDatePickerClose() {
+  clearTimeout(window.__dpOpenTimer);
+  window.__dpCloseTimer = setTimeout(closeDatePicker, 200);
+}
+
+(function () {
+  buildCalendarSnaps();
+  var wrap = document.getElementById('switcherWrap');
+  if (!wrap) return;
+  wrap.addEventListener('mouseenter', function () { clearTimeout(window.__dpCloseTimer); window.__dpOpenTimer = setTimeout(openDatePicker, 120); });
+  wrap.addEventListener('mouseleave', scheduleDatePickerClose);
+  var sw = document.getElementById('switcher');
+  if (sw) sw.addEventListener('click', openDatePicker);
+  var grid = document.getElementById('dpGrid');
+  if (grid) grid.addEventListener('click', function (e) {
+    var cell = e.target && e.target.closest ? e.target.closest('.dp-cell') : null;
+    if (cell && cell.dataset.date && calendarByDate[cell.dataset.date]) {
+      switchDataset(calendarByDate[cell.dataset.date]);
+      closeDatePicker();
+    }
+  });
+  function navYear(delta) { calendarViewYear += delta; renderCalendar(); }
+  function navMonth(delta) {
+    calendarViewMonth += delta;
+    if (calendarViewMonth < 1) { calendarViewMonth = 12; calendarViewYear--; }
+    if (calendarViewMonth > 12) { calendarViewMonth = 1; calendarViewYear++; }
+    renderCalendar();
+  }
+  var bPrevYear = document.getElementById('navPrevYear'); if (bPrevYear) bPrevYear.addEventListener('click', function () { navYear(-1); });
+  var bNextYear = document.getElementById('navNextYear'); if (bNextYear) bNextYear.addEventListener('click', function () { navYear(1); });
+  var bPrevMonth = document.getElementById('navPrevMonth'); if (bPrevMonth) bPrevMonth.addEventListener('click', function () { navMonth(-1); });
+  var bNextMonth = document.getElementById('navNextMonth'); if (bNextMonth) bNextMonth.addEventListener('click', function () { navMonth(1); });
+  var bLatest = document.getElementById('dpLatest');
+  if (bLatest) bLatest.addEventListener('click', function () {
+    if (typeof CURRENT_DATE_KEY !== 'undefined') switchDataset(CURRENT_DATE_KEY);
+    closeDatePicker();
+  });
+  syncSwitcher();
+})();
 
