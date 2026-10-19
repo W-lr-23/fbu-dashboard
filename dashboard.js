@@ -846,15 +846,22 @@ function setupNav() {
 }
 
 // ========== Screenshot ==========
+// html2canvas 按需加载：页面渲染不依赖 cdnjs，点击下载时才注入脚本
 function downloadScreenshot() {
-  if (typeof html2canvas !== 'undefined') {
+  var shot = function() {
     html2canvas(document.querySelector('.container'), { scale: 2, useCORS: true, backgroundColor: '#f0f2f5' }).then(function(canvas) {
       var link = document.createElement('a');
       link.download = 'FBU\u6d77\u5916\u7ee9\u6548\u770b\u677f-' + (new Date().getMonth()+1) + '\u6708-' + new Date().toISOString().slice(0,10) + '.png';
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
-  } else { window.print(); }
+  };
+  if (typeof html2canvas !== 'undefined') { shot(); return; }
+  var s = document.createElement('script');
+  s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+  s.onload = shot;
+  s.onerror = function() { alert('\u622a\u56fe\u7ec4\u4ef6\u52a0\u8f7d\u5931\u8d25\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u540e\u91cd\u8bd5'); };
+  document.head.appendChild(s);
 }
 
 // ========== Resize ==========
@@ -877,42 +884,6 @@ function initAll() {
   setupNav();
 }
 document.addEventListener('DOMContentLoaded', initAll);
-
-// ========== 交互优化①：穿刺卡片悬停唤出（原 onclick 全部保留，点击仍可用） ==========
-(function () {
-  var DRILL_RE = /^(showSummaryDrill|showDetailDrill|showBothIncomplete|showAllPersonnel|showRegionFiltered|showStagePersonnel)\(this\)/;
-  var lastHoverEl = null;
-  document.addEventListener('mouseover', function (e) {
-    var t = e.target;
-    while (t && t !== document) {
-      if (t.getAttribute) {
-        var oc = t.getAttribute('onclick');
-        if (oc) {
-          var m = oc.match(DRILL_RE);
-          if (m) {
-            if (lastHoverEl === t) return;
-            lastHoverEl = t;
-            clearTimeout(window.__modalHoverCloseTimer);
-            window[m[1]](t);
-            return;
-          }
-        }
-      }
-      t = t.parentNode;
-    }
-  });
-  var overlay = document.getElementById('modalOverlay');
-  if (overlay) {
-    overlay.addEventListener('mouseenter', function () { clearTimeout(window.__modalHoverCloseTimer); });
-    overlay.addEventListener('mouseleave', function () { window.__modalHoverCloseTimer = setTimeout(closeModal, 150); });
-  }
-  var _origCloseModal = closeModal;
-  closeModal = function () {
-    clearTimeout(window.__modalHoverCloseTimer);
-    lastHoverEl = null;
-    _origCloseModal();
-  };
-})();
 
 // ========== 交互优化②：悬停日期切换日历（<< < 2026 > >> + 最新数据按钮） ==========
 var calendarSnaps = [];
