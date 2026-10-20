@@ -6,6 +6,7 @@
 <title>FBU海外绩效看板-10月</title>
 </head>
 <body>
+<div id="pageLoading" style="position:fixed;inset:0;background:#f0f2f5;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2147483647;font-family:'PingFang SC','Microsoft YaHei',sans-serif"><div style="width:42px;height:42px;border:4px solid #d4d9e2;border-top-color:#1677ff;border-radius:50%;animation:fbSpin 0.9s linear infinite"></div><div id="pageLoadingText" style="margin-top:18px;font-size:16px;color:#333">看板数据加载中，请稍候…</div><div id="pageLoadingHint" style="margin-top:8px;font-size:13px;color:#999"></div></div><style>@keyframes fbSpin{to{transform:rotate(360deg)}}</style>
 <script>
 
 /*
@@ -137,9 +138,9 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
   <div class="title-row">
     <div><h1 id="dashTitle">FBU海外绩效看板-10月</h1><div class="subtitle">Performance &amp; Target Dashboard</div></div>
     <div class="header-right">
-      <div class="meta" id="dashMeta">数据更新时间：2026年10月19日<br>统计周期：2026年9月1日 - 2026年10月31日<br><select class="date-selector" id="dateSelector" style="display:none" onchange="switchDataset(this.value)"><option value="10.19">10月19日数据</option><option value="9.23">9月23日数据</option><option value="9.20">9月20日数据</option><option value="9.17">9月17日数据</option><option value="9.16">9月16日数据</option><option value="8.26">8月26日数据</option><option value="8.21">8月21日数据</option><option value="8.20">8月20日数据</option><option value="8.19">8月19日数据</option><option value="8.18">8月18日数据</option><option value="8.17">8月17日数据</option><option value="7.21">7月21日数据</option><option value="7.20">7月20日数据</option></select></div>
+      <div class="meta" id="dashMeta">数据更新时间：2026年10月20日<br>统计周期：2026年9月1日 - 2026年10月31日<br><select class="date-selector" id="dateSelector" style="display:none" onchange="switchDataset(this.value)"><option value="10.20">10月20日数据</option><option value="10.19">10月19日数据</option><option value="9.23">9月23日数据</option><option value="9.20">9月20日数据</option><option value="9.17">9月17日数据</option><option value="9.16">9月16日数据</option><option value="8.26">8月26日数据</option><option value="8.21">8月21日数据</option><option value="8.20">8月20日数据</option><option value="8.19">8月19日数据</option><option value="8.18">8月18日数据</option><option value="8.17">8月17日数据</option><option value="7.21">7月21日数据</option><option value="7.20">7月20日数据</option></select></div>
       <div class="switcher-wrap" id="switcherWrap">
-        <div class="switcher" id="switcher"><span id="switcherLabel">10月19日数据</span><span class="caret">▾</span></div>
+        <div class="switcher" id="switcher"><span id="switcherLabel">10月20日数据</span><span class="caret">▾</span></div>
         <div class="date-picker" id="datePicker">
           <div class="dp-head">
             <button type="button" title="上一年" id="navPrevYear">&lt;&lt;</button>
@@ -241,13 +242,67 @@ body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; background: #f
     <div class="modal-main" id="modalMain"><button class="close-btn" onclick="closeModal()">&times;</button><div id="modalContent"></div></div>
   </div>
 </div>
-<script src="data1.js?v=40d369375d"></script>
-<script src="data2.js?v=23d4316b3d"></script>
-<script src="data3.js?v=795504963d"></script>
-<script src="data4.js?v=75ec7cf215"></script>
-<script src="data5.js?v=844ae49106"></script>
-<script src="data6.js?v=89e959c312"></script>
-<script src="data7.js?v=01b97861d3"></script>
-<script src="dashboard.js?v=75a20ff223"></script>
+<script>
+window.__fbFiles = [
+  {n:"data1.js",v:"30d3795ea1"},
+  {n:"data2.js",v:"2b0c627097"},
+  {n:"data3.js",v:"bff963b769"},
+  {n:"data4.js",v:"45d1155d21"},
+  {n:"data5.js",v:"394a524e35"},
+  {n:"data6.js",v:"dc0ff38c6e"},
+  {n:"data7.js",v:"987b91cf11"},
+  {n:"dashboard.js",v:"50296cea3b"},
+];
+window.__fbState = { idx: 0, failed: {} };
+function __fbEl(id) { return document.getElementById(id); }
+function __fbSetText(id, t) { var el = __fbEl(id); if (el) el.textContent = t; }
+function __fbHideLoading() {
+  var lv = __fbEl("pageLoading");
+  if (!lv) return;
+  lv.style.transition = "opacity 0.3s";
+  lv.style.opacity = "0";
+  setTimeout(function () { if (lv.parentNode) lv.remove(); }, 350);
+}
+function __fbShowFail() {
+  var lv = __fbEl("pageLoading");
+  if (!lv) return;
+  lv.innerHTML = '<div style="text-align:center;padding:24px">' + '<div style="font-size:18px;color:#c0392b">看板数据加载失败</div>' + '<div style="margin-top:10px;font-size:14px;color:#666">网络不稳定，请稍后重试</div>' + '<button onclick="location.reload()" style="margin-top:18px;padding:9px 32px;background:#1677ff;color:#fff;border:none;border-radius:6px;font-size:15px;cursor:pointer">重新加载</button></div>';
+}
+function __fbLoadNext() {
+  var st = window.__fbState;
+  var all = window.__fbFiles;
+  if (st.idx >= all.length) { __fbHideLoading(); return; }
+  var f = all[st.idx];
+  __fbSetText("pageLoadingText", "看板数据加载中 " + (st.idx + 1) + "/" + all.length + "…");
+  var s = document.createElement("script");
+  s.src = f.n + "?v=" + f.v;
+  s.onload = function () { st.idx++; __fbLoadNext(); };
+  s.onerror = function () {
+    if (st.failed[f.n]) { __fbShowFail(); return; }
+    st.failed[f.n] = 1;
+    var r = document.createElement("script");
+    r.src = f.n + "?v=" + f.v + "&r=" + Date.now();
+    r.onload = function () { st.idx++; __fbLoadNext(); };
+    r.onerror = function () { __fbShowFail(); };
+    document.head.appendChild(r);
+  };
+  document.head.appendChild(s);
+}
+(function () {
+  window.__fbFiles.forEach(function (f) {
+    var l = document.createElement("link");
+    l.rel = "preload";
+    l.as = "script";
+    l.href = f.n + "?v=" + f.v;
+    document.head.appendChild(l);
+  });
+  setTimeout(function () {
+    if (window.__fbState.idx < window.__fbFiles.length) {
+      __fbSetText("pageLoadingHint", "网络较慢时首次加载可能需要 1-2 分钟，请勿关闭页面");
+    }
+  }, 8000);
+  __fbLoadNext();
+})();
+</script>
 </body>
 </html>
